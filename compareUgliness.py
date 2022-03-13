@@ -33,18 +33,25 @@ LIPS_POINTS = [61, 67]
 LEFT_LIPS_POINTS = [60, 61, 67]
 RIGHT_LIPS_POINTS = [63, 64, 65]
 
-
 SYMMETRY_LINE_POINTS = [27, 28, 29, 30, 33, 51, 62, 66, 57, 8]
-FACE_FEATURES = ["eyes",
+FACE_FEATURES = ["jaw",
+                 "eyes",
                  "eye_brows",
                  "nose",
-                 "lips",
                  "mouth",
-                 "jaw"
+                 "lips"
                  ]
 
 RESIZED_HEIGHT = 200
 RESIZED_WIDTH = 200
+
+
+def printCoordinate(start, end, landmarks):
+    for i in range(start, end):
+        x = landmarks.part(i).x
+        y = landmarks.part(i).y
+
+        print("point : ", i, "x : ", x, "y : ", y)
 
 
 def getFaceLandmarks(image):
@@ -109,6 +116,7 @@ def centerOfPoints(coordinates):
 
     return sumOfCoordinates / len(coordinates)
 
+
 def getCoordinateFaceFeature(feature, landmarks):
     leftCoordinateFeature_X = []
     leftCoordinateFeature_Y = []
@@ -120,7 +128,7 @@ def getCoordinateFaceFeature(feature, landmarks):
 
     if feature == "jaw":
         index_points_beginning = LEFT_JAW_POINTS[0]
-        index_points_end = RIGHT_JAW_POINTS[1]
+        index_points_end = LEFT_JAW_POINTS[1]
 
         for point_index in range(index_points_beginning, index_points_end):
             pointCoordinate_X = landmarks.part(point_index).x
@@ -129,8 +137,8 @@ def getCoordinateFaceFeature(feature, landmarks):
             leftCoordinateFeature_X.append(pointCoordinate_X)
             leftCoordinateFeature_Y.append(pointCoordinate_Y)
 
-        index_points_beginning = RIGHT_EYE_POINTS[0]
-        index_points_end = RIGHT_EYE_POINTS[1]
+        index_points_beginning = RIGHT_JAW_POINTS[0]
+        index_points_end = RIGHT_JAW_POINTS[1]
 
         for point_index in range(index_points_beginning, index_points_end):
             pointCoordinate_X = landmarks.part(point_index).x
@@ -284,11 +292,8 @@ def getCoordinateFaceFeature(feature, landmarks):
 
         return coordinates
 
-def emptyCoordinateList(list_x, list_y):
-    list_x [:] = []
-    list_y [:] = []
 
-def getCoordinateFaceFeature(landmarks):
+def getAllCoordinateFaceFeature(landmarks):
     leftCoordinateFeature_X = []
     leftCoordinateFeature_Y = []
 
@@ -303,185 +308,27 @@ def getCoordinateFaceFeature(landmarks):
     COORDINATES_JAW = []
 
     # coordinates of Jaws points
-
-    index_points_beginning = LEFT_JAW_POINTS[0]
-    index_points_end = RIGHT_JAW_POINTS[1]
-
-    # Left jaw points
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        leftCoordinateFeature_X.append(pointCoordinate_X)
-        leftCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    # Right Jaw Points
-    index_points_beginning = RIGHT_JAW_POINTS[0]
-    index_points_end = RIGHT_JAW_POINTS[1]
-
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        rightCoordinateFeature_X.append(pointCoordinate_X)
-        rightCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    COORDINATES_JAW.append(leftCoordinateFeature_X)
-    COORDINATES_JAW.append(leftCoordinateFeature_Y)
-
-    COORDINATES_JAW.append(rightCoordinateFeature_X)
-    COORDINATES_JAW.append(rightCoordinateFeature_Y)
-
-    # empty the list
-    rightCoordinateFeature_X[:] = []
-    rightCoordinateFeature_Y[:] = []
-
-    leftCoordinateFeature_X[:] = []
-    leftCoordinateFeature_Y[:] = []
+    COORDINATES_JAW = getCoordinateFaceFeature(FACE_FEATURES[0], landmarks)
 
     # Coordinates of Eyes points
-
-    # Left eye Points
-    index_points_beginning = LEFT_EYE_POINTS[0]
-    index_points_end = LEFT_EYE_POINTS[1]
-
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        leftCoordinateFeature_X.append(pointCoordinate_X)
-        leftCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    index_points_beginning = RIGHT_EYE_POINTS[0]
-    index_points_end = RIGHT_EYE_POINTS[1]
-
-    # Right eye Points
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        rightCoordinateFeature_X.append(pointCoordinate_X)
-        rightCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    COORDINATES_EYES.append(leftCoordinateFeature_X)
-    COORDINATES_EYES.append(leftCoordinateFeature_Y)
-
-    COORDINATES_EYES.append(rightCoordinateFeature_X)
-    COORDINATES_EYES.append(rightCoordinateFeature_Y)
-
+    COORDINATES_EYES = getCoordinateFaceFeature(FACE_FEATURES[1], landmarks)
 
     # Coordinates of eye_brows points
-
-    # Right eyebrow points
-    index_points_beginning = LEFT_EYEBROW_POINTS[0]
-    index_points_end = LEFT_EYEBROW_POINTS[1]
-
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        leftCoordinateFeature_X.append(pointCoordinate_X)
-        leftCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    index_points_beginning = RIGHT_EYEBROW_POINTS[0]
-    index_points_end = RIGHT_EYEBROW_POINTS[1]
-
-    # Left eyebrow points
-
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        rightCoordinateFeature_X.append(pointCoordinate_X)
-        rightCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    COORDINATES_EYE_BROWS.append(leftCoordinateFeature_X)
-    COORDINATES_EYE_BROWS.append(leftCoordinateFeature_Y)
-
-    COORDINATES_EYE_BROWS.append(rightCoordinateFeature_X)
-    COORDINATES_EYE_BROWS.append(rightCoordinateFeature_Y)
+    COORDINATES_EYES = getCoordinateFaceFeature(FACE_FEATURES[2], landmarks)
 
     # Coordinates of Nose points
-
-    # Right nose points
-
-    index_points_beginning = LEFT_NOSE_POINTS[0]
-    index_points_end = LEFT_NOSE_POINTS[1]
-
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        leftCoordinateFeature_X.append(pointCoordinate_X)
-        leftCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    index_points_beginning = RIGHT_NOSE_POINTS[0]
-    index_points_end = RIGHT_NOSE_POINTS[1]
-
-    # left nose points
-
-    for point_index in range(index_points_beginning, index_points_end):
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        rightCoordinateFeature_X.append(pointCoordinate_X)
-        rightCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    COORDINATES_NOSE.append(leftCoordinateFeature_X)
-    COORDINATES_NOSE.append(leftCoordinateFeature_Y)
-
-    COORDINATES_NOSE.append(rightCoordinateFeature_X)
-    COORDINATES_NOSE.append(rightCoordinateFeature_Y)
+    COORDINATES_NOSE = getCoordinateFaceFeature(FACE_FEATURES[3], landmarks)
 
     # Coordinates of mouth points
-
-    # left mouth points
-    for point_index in LEFT_MOUTH_POINTS:
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        leftCoordinateFeature_X.append(pointCoordinate_X)
-        leftCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    # Right mouth points
-    for point_index in LEFT_MOUTH_POINTS:
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        rightCoordinateFeature_X.append(pointCoordinate_X)
-        rightCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    COORDINATES_MOUTH.append(leftCoordinateFeature_X)
-    COORDINATES_MOUTH.append(leftCoordinateFeature_Y)
-
-    COORDINATES_MOUTH.append(rightCoordinateFeature_X)
-    COORDINATES_MOUTH.append(rightCoordinateFeature_Y)
-
+    COORDINATES_MOUTH = getCoordinateFaceFeature(FACE_FEATURES[4], landmarks)
 
     # Coordinates of lips points
+    COORDINATES_EYES = getCoordinateFaceFeature(FACE_FEATURES[5], landmarks)
 
-    # left lips points
-    for point_index in LEFT_LIPS_POINTS:
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
 
-        leftCoordinateFeature_X.append(pointCoordinate_X)
-        leftCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    # right lips points
-    for point_index in RIGHT_LIPS_POINTS:
-        pointCoordinate_X = landmarks.part(point_index).x
-        pointCoordinate_Y = landmarks.part(point_index).y
-
-        rightCoordinateFeature_X.append(pointCoordinate_X)
-        rightCoordinateFeature_Y.append(pointCoordinate_Y)
-
-    COORDINATES_LIPS.append(leftCoordinateFeature_X)
-    COORDINATES_LIPS.append(leftCoordinateFeature_Y)
-
-    COORDINATES_LIPS.append(rightCoordinateFeature_X)
-    COORDINATES_LIPS.append(rightCoordinateFeature_Y)
-
+def emptyCoordinateList(list_x, list_y):
+    list_x[:] = []
+    list_y[:] = []
 
 
 def symmetryRatioFaceFeature(landmarks):
@@ -500,8 +347,7 @@ def symmetryRatioFaceFeature(landmarks):
         leftEyeCoordinate_X = []
         leftEyeCoordinate_y = []
 
-#         todo
-
+        # todo
 
 
 def showImage(image):
